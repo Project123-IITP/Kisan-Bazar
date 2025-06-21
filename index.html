@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grameen Kisan Bazaar</title>
+ <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="header" id="header-text">
+  Connecting Farmer Directly with Customers
+
+  <div class="header-buttons">
+    <!-- Notification Icon Left -->
+   <a href="notifications.html" class="notification-link">
+    <img src="icon.png"
+         alt="notification icon"
+         class="notification-img" />
+    <span class="notification-badge"></span>
+  </a>
+
+    <!-- Login Button -->
+    <a href="login.html" class="login-btn">Login</a>
+  </div>
+</div>
+
+
+  <div class="sell-section">
+    <div class="sell-text">
+      <b id="sell-title">Sell Your Crop</b><br>
+      <span id="sell-desc">List Your Fresh Product and Connecting with buyers directly</span>
+    </div>
+    <button class="post-btn" id="post-now-text">POST NOW</button>
+  </div>
+
+  
+
+  <h2 id="feature-product-text">Featured Product</h2>
+  <!-- Product List -->
+  <div class="product-list grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="product-item bg-white shadow p-4 rounded cursor-pointer hover:shadow-lg transition"
+      onclick="showDetails('Wheat', '₹2000/quintal', 'https://www.indiaagronet.com/images/grain-wheat.jpg')">
+      <img src="https://www.indiaagronet.com/images/grain-wheat.jpg" alt="Wheat" class="w-full h-40 object-cover rounded">
+      <p class="mt-2 text-center font-medium">Wheat - ₹2000/quintal</p>
+    </div>
+
+    <div class="product-item bg-white shadow p-4 rounded cursor-pointer hover:shadow-lg transition"
+      onclick="showDetails('Rice', '₹1800/quintal', 'https://5.imimg.com/data5/SELLER/Default/2022/2/WH/HX/XL/145925103/rice.jpg')">
+      <img src="https://5.imimg.com/data5/SELLER/Default/2022/2/WH/HX/XL/145925103/rice.jpg" alt="Rice" class="w-full h-40 object-cover rounded">
+      <p class="mt-2 text-center font-medium">Rice - ₹1800/quintal</p>
+    </div>
+
+    <div class="product-item bg-white shadow p-4 rounded cursor-pointer hover:shadow-lg transition"
+      onclick="showDetails('Tomato', '₹40/kg', 'https://www.bigbasket.com/media/uploads/p/l/10000200_27-fresho-tomato-hybrid.jpg')">
+      <img src="https://www.bigbasket.com/media/uploads/p/l/10000200_27-fresho-tomato-hybrid.jpg" alt="Tomato" class="w-full h-40 object-cover rounded">
+      <p class="mt-2 text-center font-medium">Tomato - ₹40/kg</p>
+    </div>
+
+    <div class="product-item bg-white shadow p-4 rounded cursor-pointer hover:shadow-lg transition"
+      onclick="showDetails('Potato', '₹20/kg', 'https://www.bigbasket.com/media/uploads/p/l/10000159_15-fresho-potato.jpg')">
+      <img src="https://www.bigbasket.com/media/uploads/p/l/10000159_15-fresho-potato.jpg" alt="Potato" class="w-full h-40 object-cover rounded">
+      <p class="mt-2 text-center font-medium">Potato - ₹20/kg</p>
+    </div>
+
+    <div class="product-item bg-white shadow p-4 rounded cursor-pointer hover:shadow-lg transition"
+      onclick="showDetails('Onion', '₹25/kg', 'https://www.bigbasket.com/media/uploads/p/l/10000096_20-fresho-onion.jpg')">
+      <img src="https://www.bigbasket.com/media/uploads/p/l/10000096_20-fresho-onion.jpg" alt="Onion" class="w-full h-40 object-cover rounded">
+      <p class="mt-2 text-center font-medium">Onion - ₹25/kg</p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+    <div class="bg-white w-11/12 max-w-md p-6 rounded shadow relative">
+      <button onclick="closeModal()" class="absolute top-2 right-3 text-red-500 text-2xl">&times;</button>
+      <img id="modalImage" src="" alt="Product Image" class="w-full rounded mb-4" />
+      <h3 id="modalName" class="text-xl font-semibold text-gray-800 mb-2"></h3>
+      <p id="modalPrice" class="text-gray-700"></p>
+    </div>
+  </div>
+
+
+  <div class="categories">
+    <h2 id="category-title">Categories</h2>
+    <button id="cat1">Vegetables</button>
+    <button id="cat2">Grains</button>
+      <label for="category-select" class="visually-hidden">Select Category</label>
+      <select id="category-select" aria-label="Select Category">
+        <option>Category^</option>
+      </select>
+  </div>
+
+  <div class="all-products">
+    <h2 id="all-product-title">ALL Product</h2>
+    <div class="filters">
+      <input type="text" id="min-price" placeholder="Min">
+      <input type="text" id="max-price" placeholder="Max">
+      <select id="category-select">
+        <option>Category^</option>
+      </select>
+      <input type="text" id="search-bar" placeholder="Search Products.......">
+    </div>
+
+    <div class="product-entry">
+      <div id="prod5">Rajma (Kidney Beans) – ₹70/kg</div>
+      <button class="add-to-cart" id="add1">Add to Cart</button>
+    </div>
+    <div class="product-entry">
+      <div id="prod6">Sorghum (Jowar) – ₹26/kg</div>
+      <button class="add-to-cart" id="add2">Add to Cart</button>
+    </div>
+    <div class="product-entry">
+      <div id="prod7">Sugarcane – ₹8/stick</div>
+      <button class="add-to-cart" id="add3">Add to Cart</button>
+    </div>
+    <div class="product-entry">
+      <div id="prod8">Onion – ₹20/kg</div>
+      <button class="add-to-cart" id="add4">Add to Cart</button>
+    </div>
+  </div>
+
+  <div class="why-choose">
+    <h2 id="why-title">Why Choose Us</h2>
+    <div class="reasons">
+      <div class="reason">
+        <div>📍</div>
+        <b id="why1">Direct From Farmers</b><br>
+        <span id="why1-sub">Crop Source directly from the Farmer</span>
+      </div>
+      <div class="reason">
+        <div>✔️</div>
+        <b id="why2">Verified Sellers</b><br>
+        <span id="why2-sub">Sellers Verified for Authenticity</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="language">
+    <label for="language-select" class="visually-hidden">Choose Language</label>
+    <select id="language-select" onchange="setLanguage(this.value)">
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+    </select>
+  </div>
+
+  <!-- Chatbot Widget -->
+  <div class="chat-icon" onclick="toggleChat()">💬</div>
+
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">Chat with us</div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="Type a message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- Floating Chat Button -->
+  <a href="Massage.html" id="messageToggle"
+    style="position: fixed; bottom: 20px; right: 20px; background-color: #5f9d5f; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer; z-index: 999; box-shadow: 0 4px 8px rgba(0,0,0,0.3); transition: transform 0.3s;">
+    💬
+  </a>
+
+
+  <!-- Chat Box -->
+  <div id="messageBox"
+    style="position: fixed; bottom: 100px; right: 20px; width: 320px; max-height: 420px; background-color: white; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease-out; z-index: 999;">
+    <div
+      style="background-color: #5f9d5f; color: white; padding: 12px 16px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+      <span>Message Seller</span>
+      <span style="cursor: pointer; font-size: 18px;" onclick="toggleChat()">❌</span>
+    </div>
+
+    <div style="padding: 10px;">
+      <label><b>Choose Seller</b></label>
+      <select id="selectSeller"
+        style="width: 100%; padding: 8px; margin-bottom: 12px; border-radius: 4px; border: 1px solid #ccc;">
+        <option value="Ram Farms">Ram Farms</option>
+        <option value="Krishna Agro">Krishna Agro</option>
+        <option value="Green Field">Green Field</option>
+        <button onclick="sendToSeller()" class="send-to-seller-btn">Send</button>
+      <div id="chatMessages"
+        style="border: 1px solid #ccc; padding: 10px; height: 170px; overflow-y: auto; background: #f9f9f9; border-radius: 6px; margin-bottom: 10px; font-size: 14px;">
+      </div>
+
+      <div style="display: flex; gap: 5px;">
+        <input type="text" id="customerMessage" placeholder="Write your message ✍️"
+          style="flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc;" />
+        <button onclick="sendToSeller()"
+          style="padding: 8px 12px; background-color: #5f9d5f; color: white; border: none; border-radius: 4px; font-weight: bold;">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show the badge after 2 seconds (example)
+    setTimeout(() => {
+      document.getElementById("notificationBadge").style.display = "inline-block";
+    }, 2000);
+  
+    const translations = {
+      hi: {
+        "header-text": "किसानों को ग्राहकों से सीधे जोड़ना",
+        "shop-now-text": "अभी खरीदें",
+        "message-text": "संदेश",
+        "sell-title": "अपनी फसल बेचें",
+        "sell-desc": "अपने ताजे उत्पाद को सूचीबद्ध करें और सीधे खरीदारों से जुड़ें",
+        "post-now-text": "अभी पोस्ट करें",
+        "feature-product-text": "विशेष उत्पाद",
+        "prod1": "गाजर - ₹15/किग्रा",
+        "prod2": "अनार - ₹--/किग्रा",
+        "prod3": "किशमिश - ₹350/किग्रा",
+        "prod4": "आलू - ₹7/किग्रा",
+        "category-title": "श्रेणियाँ",
+        "cat1": "सब्जियां",
+        "cat2": "अनाज",
+        "cat3": "फल",
+        "cat4": "दालें",
+        "cat5": "अन्य",
+        "all-product-title": "सभी उत्पाद",
+        "min-price": "न्यूनतम",
+        "max-price": "अधिकतम",
+        "search-bar": "उत्पाद खोजें.......",
+        "prod5": "राजमा – ₹70/किग्रा",
+        "prod6": "ज्वार – ₹26/किग्रा",
+        "prod7": "गन्ना – ₹8/छड़ी",
+        "prod8": "प्याज – ₹20/किग्रा",
+        "add1": "कार्ट में जोड़ें",
+        "add2": "कार्ट में जोड़ें",
+        "add3": "कार्ट में जोड़ें",
+        "add4": "कार्ट में जोड़ें",
+        "why-title": "हमें क्यों चुनें",
+        "why1": "किसानों से सीधे",
+        "why1-sub": "फसल सीधे किसान से",
+        "why2": "सत्यापित विक्रेता",
+        "why2-sub": "प्रामाणिकता के लिए सत्यापित विक्रेता"
+      }
+    };
+
+    function setLanguage(lang) {
+      if (!translations[lang]) return;
+      Object.entries(translations[lang]).forEach(([id, text]) => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (el.placeholder !== undefined) {
+            el.placeholder = text;
+          } else {
+            el.textContent = text;
+          }
+        }
+      });
+    }
+
+    function toggleChat() {
+      const box = document.getElementById('messageBox');
+      const toggle = document.getElementById('messageToggle');
+      // TODO: Complete the logic for toggling chat box visibility
+      // Example placeholder logic:
+      if (box.style.display === "none" || box.style.display === "") {
+        box.style.display = "flex";
+      } else {
+        box.style.display = "none";
+      }
+  } 
+  // JavaScript for modal
+  function showDetails(name, price, imageUrl) {
+    document.getElementById('modalName').innerText = name;
+    document.getElementById('modalPrice').innerText = price;
+    document.getElementById('modalImage').src = imageUrl;
+    document.getElementById('productModal').classList.remove('hidden');
+    document.getElementById('productModal').classList.add('flex');
+  }
+
+    function closeModal() {
+      document.getElementById('productModal').classList.remove('flex');
+      document.getElementById('productModal').classList.add('hidden');
+    }
+
+    // Optional: close on outside click
+    window.onclick = function (e) {
+      const modal = document.getElementById('productModal');
+      if (e.target === modal) {
+        closeModal();
+      }
+    };
+  </script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating bubbles background */
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in;
+            opacity: 0.5;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+            }
+        }
+
+        /* Main container for centering */
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            z-index: 2;
+        }
+
+        /* Form container */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            background: linear-gradient(to right, #4CAF50, #2196F3);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .language-selector {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 25px 20px;
+                margin: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated bubbles background -->
+    <div class="bubbles"></div>
+
+    <!-- Centered container -->
+    <div class="center-container">
+        <!-- Registration Form -->
+        <div class="form-container" id="registration-container">
+            <div class="language-selector">
+                <label for="language">Select Language:</label>
+                <select id="language" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                </select>
+            </div>
+            <h1 id="form-title">Registration Form</h1>
+
+            <label id="label-registration-type" for="registration_type">Select Registration Type:</label>
+            <select id="registration_type">
+                <option value="">--Select--</option>
+                <option value="farmer">Farmer Registration</option>
+                <option value="buyer">Buyer Registration</option>
+            </select>
+
+            <label id="label-full-name">Full Name:</label>
+            <input type="text" required id="reg-name">
+
+            <label id="label-email">Email:</label>
+            <input type="email" required id="reg-email">
+
+            <label id="label-phone">Phone Number:</label>
+            <input type="tel" required id="reg-phone">
+
+            <label id="label-password">Create Password:</label>
+            <div style="position: relative;">
+                <input type="password" required id="reg-password" style="padding-right: 40px;">
+                <span class="toggle-eye" onclick="togglePassword('reg-password', this)"
+                    style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;">👁️</span>
+            </div>
+
+            <label id="label-confirm-password">Confirm Password:</label>
+            <div style="position: relative;">
+                <input type="password" required id="reg-confirm-password" style="padding-right: 40px;">
+                <span class="toggle-eye" onclick="togglePassword('reg-confirm-password', this)"
+                    style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;">👁️</span>
+            </div>
+
+
+
+
+
+
+
+            <button id="submit-btn" type="button" onclick="window.location.href='index.html'">
+  Register
+</button>
+
+
+
+            <div class="switch-container">
+                <a href="login.html" class="switch-btn">Already Registered? Login Here</a>
+            </div>
+
+        </div>
+
+        <script>
+            // Create bubbles for background
+            function createBubbles() {
+                const bubblesContainer = document.querySelector('.bubbles');
+                const bubblesCount = 15;
+
+                for (let i = 0; i < bubblesCount; i++) {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+
+                    // Random properties
+                    const size = Math.random() * 100 + 20;
+                    const posX = Math.random() * 100;
+                    const delay = Math.random() * 15;
+                    const duration = Math.random() * 20 + 10;
+
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    bubble.style.left = `${posX}%`;
+                    bubble.style.animationDelay = `${delay}s`;
+                    bubble.style.animationDuration = `${duration}s`;
+
+                    bubblesContainer.appendChild(bubble);
+                }
+            }
+
+            // Language translations
+            const translations = {
+                'en': {
+                    'form-title': 'Registration Form',
+                    'label-registration-type': 'Select Registration Type:',
+                    'label-full-name': 'Full Name:',
+                    'label-email': 'Email:',
+                    'label-phone': 'Phone Number:',
+                    'label-password': 'Create Password:',
+                    'label-confirm-password': 'Confirm Password:',
+                    'submit-btn': 'Register'
+                },
+                'hi': {
+                    'form-title': 'पंजीकरण फॉर्म',
+                    'label-registration-type': 'पंजीकरण प्रकार चुनें:',
+                    'label-full-name': 'पूरा नाम:',
+                    'label-email': 'ईमेल:',
+                    'label-phone': 'फोन नंबर:',
+                    'label-password': 'पासवर्ड बनाएं:',
+                    'label-confirm-password': 'पासवर्ड की पुष्टि करें:',
+                    'submit-btn': 'रजिस्टर करें'
+                }
+
+            };
+
+            function changeLanguage(lang) {
+                document.getElementById('form-title').innerText = translations[lang]['form-title'];
+                document.getElementById('label-registration-type').innerText = translations[lang]['label-registration-type'];
+                document.getElementById('label-full-name').innerText = translations[lang]['label-full-name'];
+                document.getElementById('label-email').innerText = translations[lang]['label-email'];
+                document.getElementById('label-phone').innerText = translations[lang]['label-phone'];
+                document.getElementById('submit-btn').innerText = translations[lang]['submit-btn'];
+                document.getElementById('label-password').innerText = translations[lang]['label-password'];
+                document.getElementById('label-confirm-password').innerText = translations[lang]['label-confirm-password'];
+
+            }
+
+            // Initialize on load
+            window.addEventListener('DOMContentLoaded', function () {
+                createBubbles();
+            });
+
+            function togglePassword(inputId, iconElement) {
+                const input = document.getElementById(inputId);
+                if (input.type === "password") {
+                    input.type = "text";
+                    iconElement.innerText = "🙈";
+                } else {
+                    input.type = "password";
+                    iconElement.innerText = "👁️";
+                }
+            }
+
+
+        </script>
+
+
+</body>
+
+</html>

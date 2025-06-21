@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisan Bazaar - Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --farmer: #4CAF50;
+            --customer: #2196F3;
+            --deal: #FF9800;
+            --urgent: #F44336;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        
+        .notification-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .notification-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            padding: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-tabs {
+            display: flex;
+            background: #f1f1f1;
+        }
+        
+        .notification-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .notification-tab.active {
+            background: white;
+            color: var(--farmer);
+            border-bottom: 2px solid var(--farmer);
+        }
+        
+        .notification-tab:nth-child(2).active {
+            color: var(--customer);
+            border-bottom-color: var(--customer);
+        }
+        
+        .notification-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .notification-item:hover {
+            background: #f9f9f9;
+        }
+        
+        .notification-item.unread {
+            background: rgba(76, 175, 80, 0.05);
+        }
+        
+        .notification-item.customer.unread {
+            background: rgba(33, 150, 243, 0.05);
+        }
+        
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            color: white;
+        }
+        
+        .notification-icon.farmer {
+            background: var(--farmer);
+        }
+        
+        .notification-icon.customer {
+            background: var(--customer);
+        }
+        
+        .notification-icon.deal {
+            background: var(--deal);
+        }
+        
+        .notification-icon.urgent {
+            background: var(--urgent);
+        }
+        
+        .notification-content {
+            flex-grow: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        .notification-message {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .notification-product {
+            display: flex;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #f9f9f9;
+            border-radius: 5px;
+            align-items: center;
+        }
+        
+        .product-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            object-fit: cover;
+            margin-right: 0.8rem;
+        }
+        
+        .product-info {
+            flex-grow: 1;
+        }
+        
+        .product-name {
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+        
+        .product-price {
+            color: var(--urgent);
+            font-weight: bold;
+        }
+        
+        .product-location {
+            font-size: 0.8rem;
+            color: #777;
+            display: flex;
+            align-items: center;
+        }
+        
+        .product-location i {
+            margin-right: 0.3rem;
+        }
+        
+        .notification-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .badge-farmer {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--farmer);
+        }
+        
+        .badge-customer {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--customer);
+        }
+        
+        .badge-deal {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--deal);
+        }
+        
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--farmer);
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            display: inline-block;
+        }
+        
+        .customer .notification-dot {
+            background: var(--customer);
+        }
+        
+        .empty-state {
+            padding: 2rem;
+            text-align: center;
+            color: #777;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state p {
+            margin-top: 0.5rem;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .notification-item {
+            animation: slideIn 0.3s ease forwards;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .notification-item {
+                flex-direction: column;
+            }
+            
+            .notification-icon {
+                margin-bottom: 0.5rem;
+            }
+            
+            .notification-product {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .product-image {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kisan Bazaar - Notifications</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Main Container -->
+  <div class="max-w-3xl mx-auto mt-6 bg-white rounded shadow">
+    
+    <!-- Header -->
+    <div class="bg-green-600 text-white p-4 flex justify-between items-center">
+      <h1 class="text-lg font-bold"><i class="fas fa-tractor mr-2"></i> Kisan Bazaar Notifications</h1>
+      <span id="currentDate" class="text-sm"></span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex border-b text-center text-gray-600 font-medium">
+      <button onclick="showTab('farmer')" class="flex-1 py-2 hover:bg-green-100 transition border-r">👨‍🌾 Farmer Alerts</button>
+      <button onclick="showTab('customer')" class="flex-1 py-2 hover:bg-blue-100 transition" id="customerTabBtn">🛒 Customer Deals</button>
+    </div>
+
+    <!-- Farmer Notifications -->
+    <div id="farmerTab" class="p-4 space-y-3">
+      <div class="bg-green-50 p-4 rounded shadow">
+        <strong>🌾 New Order Received</strong>
+        <p class="text-sm text-gray-700 mt-1">50kg Wheat ordered at ₹2200/quintal.</p>
+      </div>
+      <div class="bg-green-50 p-4 rounded shadow">
+        <strong>📉 Price Alert</strong>
+        <p class="text-sm text-gray-700 mt-1">Tomato prices dropped to ₹18/kg in your region.</p>
+      </div>
+      <div class="bg-green-50 p-4 rounded shadow">
+        <strong>🌧️ Weather Warning</strong>
+        <p class="text-sm text-gray-700 mt-1">Rain expected in 24hrs. Harvest early.</p>
+      </div>
+      <div class="bg-green-50 p-4 rounded shadow">
+        <strong>🏛️ Govt Scheme</strong>
+        <p class="text-sm text-gray-700 mt-1">PM-KISAN ₹2000 installment now available.</p>
+      </div>
+    </div>
+
+    <!-- Customer Notifications -->
+    <div id="customerTab" class="p-4 hidden space-y-3">
+      <!-- Card 1 -->
+      <div onclick="openDealModal('Alphonso Mangoes', '₹120/kg (Market: ₹180/kg)', 'Available at 5 farms within 10km', 'https://images.unsplash.com/photo-1605020420620-20c943cc4669?auto=format&fit=crop&w=600&q=60')" class="cursor-pointer bg-blue-50 hover:bg-blue-100 p-4 rounded shadow transition">
+        <div class="flex items-center">
+         
+          <div>
+            <h3 class="font-semibold text-blue-800 text-lg">Alphonso Mangoes</h3>
+            <p class="text-sm text-gray-700">₹120/kg (Market: ₹180/kg)</p>
+            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> 5 farms within 10km</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div onclick="openDealModal('Tomatoes (Local)', '₹18/kg (Market: ₹24/kg)', 'Available at Patel Farm, 3km', 'https://images.unsplash.com/photo-1592928303865-7b4b180f2c6e?auto=format&fit=crop&w=600&q=60')" class="cursor-pointer bg-blue-50 hover:bg-blue-100 p-4 rounded shadow transition">
+        <div class="flex items-center">
+       
+          <div>
+            <h3 class="font-semibold text-blue-800 text-lg">Tomatoes (Local)</h3>
+            <p class="text-sm text-gray-700">₹18/kg (Market: ₹24/kg)</p>
+            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> Patel Farm, 3km</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div onclick="openDealModal('Organic Potatoes', '₹20/kg (Market: ₹25/kg)', 'Sharma Farm, 5km from you', 'https://images.unsplash.com/photo-1582284542207-f4f8f5c0f179?auto=format&fit=crop&w=600&q=60')" class="cursor-pointer bg-blue-50 hover:bg-blue-100 p-4 rounded shadow transition">
+        <div class="flex items-center">
+         <!-- <img src="https://images.unsplash.com/photo-1582284542207-f4f8f5c0f179?auto=format&fit=crop&w=80&q=60" class="w-16 h-16 rounded mr-4 object-cover"/> -->
+          <div>
+            <h3 class="font-semibold text-blue-800 text-lg">Organic Potatoes</h3>
+            <p class="text-sm text-gray-700">₹20/kg (Market: ₹25/kg)</p>
+            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> Sharma Farm, 5km</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div onclick="openDealModal('Seasonal Green Beans', '₹30/kg (Market: ₹38/kg)', 'Green Valley Farm, 7km', 'https://images.unsplash.com/photo-1585218357648-4ff6b4e0ec97?auto=format&fit=crop&w=600&q=60')" class="cursor-pointer bg-blue-50 hover:bg-blue-100 p-4 rounded shadow transition">
+        <div class="flex items-center">
+         <!-- <img src="https://images.unsplash.com/photo-1585218357648-4ff6b4e0ec97?auto=format&fit=crop&w=80&q=60" class="w-16 h-16 rounded mr-4 object-cover"/>-->
+          <div>
+            <h3 class="font-semibold text-blue-800 text-lg">Seasonal Green Beans</h3>
+            <p class="text-sm text-gray-700">₹30/kg (Market: ₹38/kg)</p>
+            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-1"></i> Green Valley Farm, 7km</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="dealModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+    <div class="bg-white w-11/12 max-w-md p-6 rounded shadow relative">
+      <button onclick="closeDealModal()" class="absolute top-2 right-3 text-red-500 text-2xl">&times;</button>
+      <img id="modalImage" class="w-full rounded mb-4"/>
+      <h2 id="modalTitle" class="text-xl font-semibold mb-2 text-blue-700"></h2>
+      <p id="modalPrice" class="mb-1"></p>
+      <p id="modalLocation" class="text-sm text-gray-600"></p>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script>
+    // Show today's date
+    const now = new Date();
+    document.getElementById('currentDate').innerText = now.toLocaleDateString('en-IN', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    function showTab(tab) {
+      document.getElementById('farmerTab').classList.toggle('hidden', tab !== 'farmer');
+      document.getElementById('customerTab').classList.toggle('hidden', tab !== 'customer');
+    }
+
+    function openDealModal(name, price, location, imageUrl) {
+      document.getElementById('modalTitle').innerText = name;
+      document.getElementById('modalPrice').innerText = price;
+      document.getElementById('modalLocation').innerText = location;
+      document.getElementById('modalImage').src = imageUrl;
+      document.getElementById('dealModal').classList.remove('hidden');
+    }
+
+    function closeDealModal() {
+      document.getElementById('dealModal').classList.add('hidden');
+    }
+
+    window.onclick = function (e) {
+      const modal = document.getElementById('dealModal');
+      if (e.target === modal) closeDealModal();
+    };
+  </script>
+
+</body>
+</html>
+

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>किसान सन्देश - Split View</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    :root {
+      --bg: #f7faf7;
+      --text: #222;
+      --header: #3a9143;
+      --footer: #2d6a31;
+      --card-bg: white;
+    }
+    body.dark {
+      --bg: #111;
+      --text: #eee;
+      --header: #234f25;
+      --footer: #1a3b1a;
+      --card-bg: #222;
+    }
+    .app-container {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+    }
+    header {
+      background-color: var(--header);
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-left { display: flex; align-items: center; }
+    .icon { font-size: 30px; margin-right: 12px; }
+    .header-title { font-weight: 700; font-size: 24px; user-select: none; }
+    nav { display: flex; gap: 16px; font-weight: 600; font-size: 0.9rem; }
+    nav a { color: white; text-transform: uppercase; cursor: pointer; }
+    .language-toggle, .theme-toggle {
+      background: none;
+      border: 1px solid white;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 8px;
+      font-size: 0.8rem;
+    }
+    .container {
+      display: flex;
+      height: calc(100vh - 60px);
+    }
+    .sidebar {
+      width: 30%;
+      background: var(--card-bg);
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+    }
+    .chatbox {
+      flex: 1;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-content {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+    }
+    .chat-input {
+      border-top: 1px solid #ccc;
+      padding: 12px 24px;
+      background: #fff;
+      display: flex;
+      gap: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .chat-input button {
+      padding: 10px 16px;
+      background-color: var(--header);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .message-item {
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .message-item:hover {
+      background: #f0f0f0;
+    }
+    .message-item img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+    }
+    .message-sender {
+      font-weight: 600;
+    }
+    .chatbox h2 {
+      margin-top: 0;
+    }
+    .chatbox p {
+      margin-top: 8px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body class="app-container">
+  <header>
+    <div class="header-left">
+      <span class="icon">🌾</span>
+      <div class="header-title" id="title">किसान सन्देश</div>
+    </div>
+    <nav>
+      <a class="tab" onclick="setTab('unread')">Unread</a>
+      <a class="tab" onclick="setTab('important')">Important</a>
+      <a class="tab" onclick="setTab('all')">All</a>
+      <a class="tab" onclick="setTab('sent')">Sent</a>
+    </nav>
+    <div>
+      <button class="language-toggle" onclick="toggleLang()" id="langBtn">ENGLISH</button>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+  </header>
+  <div class="container">
+    <div class="sidebar" id="messageList"></div>
+    <div class="chatbox">
+      <div class="chat-content">
+        <h2 id="chatTitle">संदेश चुनें</h2>
+        <p id="chatContent">कृपया बाईं ओर किसी संदेश पर क्लिक करें।</p>
+        <div id="chatReplies"></div>
+      </div>
+      <div class="chat-input" id="chatInputBox" style="display:none;">
+        <input type="text" id="chatInput" placeholder="अपना उत्तर लिखें...">
+        <button id="sendBtn" onclick="sendMessage()">भेजें</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    let isHindi = true;
+    let selectedUser = '';
+    const allMessages = {
+      unread: [
+        { sender: { hi: 'रवि', en: 'Ravi' }, image: 'https://i.pravatar.cc/60?img=1', text: 'आपका ऑर्डर तैयार है।' },
+        { sender: { hi: 'सुनिता', en: 'Sunita' }, image: 'https://i.pravatar.cc/60?img=2', text: 'गेहूं के बीज की ज़रूरत है।' },
+        { sender: { hi: 'करन', en: 'Karan' }, image: 'https://i.pravatar.cc/60?img=3', text: 'मैंने पेमेंट कर दी है।' },
+      ],
+      important: [
+        { sender: { hi: 'रीना', en: 'Reena' }, image: 'https://i.pravatar.cc/60?img=6', text: 'अभी आपसे बात करनी है।' },
+        { sender: { hi: 'अजय', en: 'Ajay' }, image: 'https://i.pravatar.cc/60?img=7', text: 'बीज की कीमत क्या है?' },
+        { sender: { hi: 'मीना', en: 'Meena' }, image: 'https://i.pravatar.cc/60?img=8', text: 'खेत की फोटो भेजी है।' },
+      ],
+      all: [
+        { sender: { hi: 'राहुल', en: 'Rahul' }, image: 'https://i.pravatar.cc/60?img=9', text: 'नमस्कार!' },
+        { sender: { hi: 'नीलम', en: 'Neelam' }, image: 'https://i.pravatar.cc/60?img=10', text: 'धान चाहिए।' },
+        { sender: { hi: 'कमल', en: 'Kamal' }, image: 'https://i.pravatar.cc/60?img=11', text: 'प्याज़ और टमाटर चाहिए।' },
+      ],
+      sent: [
+        { sender: { hi: 'आप', en: 'You' }, image: 'https://i.pravatar.cc/60?img=12', text: 'मैंने ऑर्डर भेज दिया है।' },
+        { sender: { hi: 'आप', en: 'You' }, image: 'https://i.pravatar.cc/60?img=13', text: 'शुक्रिया!' },
+        { sender: { hi: 'आप', en: 'You' }, image: 'https://i.pravatar.cc/60?img=14', text: 'कृपया पुष्टि करें।' },
+      ]
+    };
+
+    const messageList = document.getElementById('messageList');
+    const chatTitle = document.getElementById('chatTitle');
+    const chatContent = document.getElementById('chatContent');
+    const chatReplies = document.getElementById('chatReplies');
+    const chatInput = document.getElementById('chatInput');
+    const chatInputBox = document.getElementById('chatInputBox');
+    const sendBtn = document.getElementById('sendBtn');
+    const langBtn = document.getElementById('langBtn');
+
+    function loadMessages(type) {
+      messageList.innerHTML = '';
+      const list = allMessages[type] || [];
+      list.forEach(msg => {
+        const item = document.createElement('div');
+        item.className = 'message-item';
+        const name = isHindi ? msg.sender.hi : msg.sender.en;
+        item.innerHTML = `
+          <img src="${msg.image}" alt="${name}">
+          <div>
+            <div class="message-sender">${name}</div>
+            <div class="message-text">${msg.text}</div>
+          </div>
+        `;
+        item.onclick = () => {
+          selectedUser = name;
+          chatTitle.innerText = name;
+          chatContent.innerText = msg.text;
+          chatReplies.innerHTML = '';
+          chatInputBox.style.display = 'flex';
+        };
+        messageList.appendChild(item);
+      });
+    }
+
+    function setTab(tabName) {
+      loadMessages(tabName);
+    }
+
+    function sendMessage() {
+      if (chatInput.value.trim() !== '') {
+        const reply = document.createElement('p');
+        reply.textContent = (isHindi ? 'आप: ' : 'You: ') + chatInput.value;
+        chatReplies.appendChild(reply);
+        chatInput.value = '';
+      }
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+    }
+
+    function toggleLang() {
+      isHindi = !isHindi;
+      document.getElementById('title').innerText = isHindi ? 'किसान सन्देश' : 'Farmer Messages';
+      langBtn.innerText = isHindi ? 'ENGLISH' : 'हिंदी';
+      document.getElementById('chatTitle').innerText = isHindi ? 'संदेश चुनें' : 'Select a message';
+      document.getElementById('chatContent').innerText = isHindi ? 'कृपया बाईं ओर किसी संदेश पर क्लिक करें।' : 'Please click a message from the left.';
+      chatInput.placeholder = isHindi ? 'अपना उत्तर लिखें...' : 'Type your reply...';
+      sendBtn.innerText = isHindi ? 'भेजें' : 'Send';
+      loadMessages(currentTab);
+    }
+
+    let currentTab = 'unread';
+    function setTab(tabName) {
+      currentTab = tabName;
+      loadMessages(tabName);
+    }
+
+    // Default load
+    loadMessages(currentTab);
+  </script>
+</body>
+</html>
